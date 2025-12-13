@@ -1,92 +1,127 @@
-# BLG 307 – Yapay Zeka Sistemleri  
-## Proje 1: Genetik Algoritma ile Optimizasyon
+# BLG-307 Yapay Zeka Sistemleri – 1. Proje Ödevi  
+## Genetik Algoritma ile Numune Karışımı Optimizasyonu
 
-## Öğrenci Bilgileri
+Öğrenci: Ali Uçma  
+Numara: 2212721007  
+Senaryo: 7 – Laboratuvarda Numune Karışımı  
 
-Ad Soyad: Ali Uçma  
-Öğrenci No: 2212721007  
-Ders: BLG 307 – Yapay Zeka Sistemleri  
-Dönem: 2024–2025 Güz  
-GitHub Repo: https://github.com/Alu0320/genetik_optimizasyon  
+---
 
+## 📌 Proje Açıklaması
 
-## 1. Proje Tanımı
+Bu projede, bir biyoteknoloji laboratuvarında en verimli test çözeltisini elde etmek amacıyla iki farklı reaktifin (Reaktif A ve Reaktif B) karışım oranlarının **Genetik Algoritma (GA)** kullanılarak optimize edilmesi hedeflenmiştir.
 
-Bu projede, belirli kısıtlar altında tanımlanmış doğrusal olmayan bir optimizasyon probleminin çözümü amaçlanmıştır. Problem, sürekli değerli karar değişkenleri içerdiği ve klasik yöntemlerle çözümü zor olduğu için **Genetik Algoritma (GA)** yaklaşımı kullanılarak ele alınmıştır.
+Problem, doğrusal olmayan bir amaç fonksiyonuna ve çeşitli kısıtlara sahip olduğundan, klasik optimizasyon yöntemleri yerine evrimsel bir yaklaşım olan genetik algoritma tercih edilmiştir.
 
-Amaç, tanımlanan performans fonksiyonunu maksimum yapan karar değişkeni değerlerini bulmaktır.
+Amaç, verilen kısıtlar altında **test hassasiyeti puanını maksimum yapan** reaktif oranlarını belirlemektir.
 
+---
 
-## 2. Problem Tanımı
+## 📐 Problem Tanımı ve Matematiksel Model
 
-### Amaç Fonksiyonu (Performans Skoru)
+### Amaç Fonksiyonu (Test Hassasiyeti)
 
-Sistemin performansı aşağıdaki matematiksel model ile ifade edilmiştir:
+Test hassasiyeti aşağıdaki matematiksel model ile ifade edilmiştir:
 
 \[
-y = 5x_1 + 7x_2 - 0.1 \cdot x_1^2 - 0.2 \cdot x_2^2
+y = 3x_1 + 2x_2 + x_1 \cdot x_2 - 0.5 \cdot x_2^2
 \]
 
-
 Burada;  
-y: Performans skoru  
-x₁: Birinci karar değişkeni  
-x₂: İkinci karar değişkeni  
+y: Test hassasiyeti puanı  
+x₁: Reaktif A oranı (%)  
+x₂: Reaktif B oranı (%)  
 
-Amaç, verilen kısıtlar altında performans skorunu maksimum yapan x₁ ve x₂ değerlerini belirlemektir.
+Bu fonksiyon **maksimize edilmektedir**.
 
+---
 
-### Karar Değişkenleri
+## 📌 Değişkenler (Decision Variables)
 
-x₁: 10 – 80 aralığında tanımlı  
-x₂: 10 – 80 aralığında tanımlı  
+| Değişken | Açıklama | Aralık |
+|--------|---------|--------|
+| x₁ | Reaktif A oranı (%) | 10 – 80 |
+| x₂ | Reaktif B oranı (%) | 10 – 80 |
 
+---
 
-### Kısıtlar
+## 📌 Kısıtlar (Constraints)
 
-1. Karar değişkenlerinin toplamı 100 değerini geçemez  
-   x₁ + x₂ ≤ 100  
+- Reaktif oranlarının toplamı %100’ü geçemez  
+  \[
+  x_1 + x_2 \le 100
+  \]
 
-2. Birinci karar değişkeni için minimum değer şartı vardır  
-   x₁ ≥ 25  
+- Reaktif A oranı en az %25 olmalıdır  
+  \[
+  x_1 \ge 25
+  \]
 
+---
 
-## 3. Kullanılan Yöntem: Genetik Algoritma
+## 🧬 Genetik Algoritma Yapısı
 
-Problem, gerçel değerli genler içeren bir genetik algoritma kullanılarak çözülmüştür. Algoritmanın temel bileşenleri aşağıda özetlenmiştir.
+Problem sürekli (float) değişkenler içerdiğinden hassas ayarlamaya uygun bir genetik algoritma tasarlanmıştır.
 
-Birey Temsili  
-Her birey iki gen içeren `[x₁, x₂]` yapısında tanımlanmıştır.
+### ✔ Birey Temsili
+Her birey iki gen içeren bir yapıdadır:
+[x₁, x₂]
 
-Başlangıç Popülasyonu  
-Belirlenen sınırlar içerisinde rastgele bireyler oluşturulmuştur.
+yaml
+Kodu kopyala
 
-Seçilim  
-Popülasyondaki bireyler fitness değerlerine göre sıralanmış ve en iyi bireyler seçilmiştir.
+### ✔ Başlangıç Popülasyonu
+Popülasyon büyüklüğü: 30  
+Bireyler, değişken sınırları içerisinde rastgele oluşturulmuştur.
 
-Çaprazlama  
-Ebeveyn bireylerden yeni bireyler üretmek için ağırlıklı ortalama (aritmetik) çaprazlama yöntemi kullanılmıştır.
+### ✔ Seçim Mekanizması
+Turnuva seçimi (k = 3) kullanılmıştır.
 
-Mutasyon  
-Belirli bir olasılıkla gen değerlerine küçük rastgele değişiklikler uygulanarak çeşitlilik artırılmıştır.
+### ✔ Çaprazlama (Crossover)
+Aritmetik (ağırlıklı ortalama) çaprazlama yöntemi uygulanmıştır.
 
-Kısıt Yönetimi  
-Kısıtları ihlal eden bireylere yüksek ceza değeri uygulanarak uygun olmayan çözümler elenmiştir.
+### ✔ Mutasyon
+- x₁ genine ±5 aralığında küçük değişimler  
+- x₂ genine ±5 aralığında küçük değişimler  
+- Mutasyon olasılığı: 0.2  
 
-Elitizm  
-Her neslin en iyi bireyi bir sonraki nesle doğrudan aktarılmıştır.
+Bu yöntemle çözüm uzayında ince ayar yapılması sağlanmıştır.
 
+### ✔ Kısıt Yönetimi
+Kısıtları ihlal eden bireylere yüksek ceza değeri uygulanarak (ceza fonksiyonu) uygun olmayan çözümler elenmiştir.
 
-## 4. Sonuçlar ve Değerlendirme
+### ✔ Nesil Sayısı
+Toplam: 100 nesil
 
-Algoritma çalıştırıldığında, ilk jenerasyonlarda performans skorunda hızlı bir artış gözlemlenmiş, ilerleyen jenerasyonlarda ise algoritmanın kararlı bir şekilde optimum çözüme yakınsadığı görülmüştür.
+---
 
-Elde edilen sonuçlar, genetik algoritmanın bu problem için etkili ve uygun bir optimizasyon yöntemi olduğunu göstermektedir. Yakınsama süreci grafiklerle desteklenmiştir.
+## 📌 Sonuçlar
 
+Genetik algoritma çalıştırıldığında elde edilen en iyi çözüm aşağıdaki gibidir:
 
-## 5. Kurulum ve Çalıştırma
+| Parametre | Değer |
+|--------|------|
+| Reaktif A (x₁) | ≈ 65 – 70 % |
+| Reaktif B (x₂) | ≈ 30 – 35 % |
+| Maksimum Test Hassasiyeti | ≈ 1900 – 1950 |
 
-Projenin çalıştırılabilmesi için aşağıdaki Python kütüphanelerinin yüklü olması gerekmektedir:
+Elde edilen sonuçlar, reaktif oranlarının dengeli bir şekilde dağıtılmasının test hassasiyetini artırdığını göstermektedir.
 
-```bash
-pip install numpy matplotlib
+---
+
+## 📈 Fitness Grafiği
+
+Fitness grafiği incelendiğinde:
+
+- İlk nesillerde hızlı bir artış gözlemlenmiştir.
+- Orta nesillerden itibaren artış hızı azalmış,
+- Son nesillerde algoritmanın **optimum çözüme yakınsadığı** görülmüştür.
+
+(Not: Fitness grafiği notebook dosyasında gösterilmiştir.)
+
+---
+
+## 📁 Dosya Yapısı
+
+├── README.md
+├── YZS_ödev1.ipynb
