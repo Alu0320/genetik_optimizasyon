@@ -23,9 +23,8 @@ Amaç, verilen kısıtlar altında **test hassasiyeti puanını maksimum yapan**
 
 Test hassasiyeti aşağıdaki matematiksel model ile ifade edilmiştir:
 
-\[
-y = 3x_1 + 2x_2 + x_1 \cdot x_2 - 0.5 \cdot x_2^2
-\]
+
+y =  = 3x₁ + 2x₂ + x₁x₂ - 0.5x₂² 
 
 Burada;  
 y: Test hassasiyeti puanı  
@@ -48,14 +47,10 @@ Bu fonksiyon **maksimize edilmektedir**.
 ## 📌 Kısıtlar (Constraints)
 
 - Reaktif oranlarının toplamı %100’ü geçemez  
-  \[
-  x_1 + x_2 \le 100
-  \]
+  x₁ + x₂ ≤ 100 
 
 - Reaktif A oranı en az %25 olmalıdır  
-  \[
-  x_1 \ge 25
-  \]
+ x₁ ≥ 25 
 
 ---
 
@@ -103,7 +98,7 @@ Genetik algoritma çalıştırıldığında elde edilen en iyi çözüm aşağı
 |--------|------|
 | Reaktif A (x₁) | ≈ 65 – 70 % |
 | Reaktif B (x₂) | ≈ 30 – 35 % |
-| Maksimum Test Hassasiyeti | ≈ 1900 – 1950 |
+| Maksimum Test Hassasiyeti | ≈ 1830-1900|
 
 Elde edilen sonuçlar, reaktif oranlarının dengeli bir şekilde dağıtılmasının test hassasiyetini artırdığını göstermektedir.
 
