@@ -96,9 +96,9 @@ Genetik algoritma çalıştırıldığında elde edilen en iyi çözüm aşağı
 
 | Parametre | Değer |
 |--------|------|
-| Reaktif A (x₁) | ≈ 65 – 70 % |
-| Reaktif B (x₂) | ≈ 30 – 35 % |
-| Maksimum Test Hassasiyeti | ≈ 1830-1900|
+| Reaktif A (x₁) | ≈ 70 – 75 % |
+| Reaktif B (x₂) | ≈ 25 – 30 % |
+| Maksimum Test Hassasiyeti | ≈ 1800-1900|
 
 Elde edilen sonuçlar, reaktif oranlarının dengeli bir şekilde dağıtılmasının test hassasiyetini artırdığını göstermektedir.
 
