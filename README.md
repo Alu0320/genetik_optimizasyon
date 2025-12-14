@@ -5,6 +5,8 @@
 Öğrenci: Ali Uçma
 Numara: 2212721007
 Ders: BLG 307 - Yapay Zeka Sistemleri
+GitHub Repo Bağlantısı: https://github.com/Alu0320/genetik_optimizasyon
+
 
 ---
 
