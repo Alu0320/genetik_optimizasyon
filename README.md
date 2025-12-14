@@ -1,122 +1,78 @@
-# BLG-307 Yapay Zeka Sistemleri – 1. Proje Ödevi  
-## Genetik Algoritma ile Numune Karışımı Optimizasyonu
+# BLG-307 Yapay Zeka Sistemleri – 1. Proje Ödevi
 
-Öğrenci: Ali Uçma  
-Numara: 2212721007  
-Senaryo: 7 – Laboratuvarda Numune Karışımı  
+## Genetik Algoritma ile Numune Karışımı Optimizasyonu (Senaryo 7)
 
----
-
-## 📌 Proje Açıklaması
-
-Bu projede, bir biyoteknoloji laboratuvarında en verimli test çözeltisini elde etmek amacıyla iki farklı reaktifin (Reaktif A ve Reaktif B) karışım oranlarının **Genetik Algoritma (GA)** kullanılarak optimize edilmesi hedeflenmiştir.
-
-Problem, doğrusal olmayan bir amaç fonksiyonuna ve çeşitli kısıtlara sahip olduğundan, klasik optimizasyon yöntemleri yerine evrimsel bir yaklaşım olan genetik algoritma tercih edilmiştir.
-
-Amaç, verilen kısıtlar altında **test hassasiyeti puanını maksimum yapan** reaktif oranlarını belirlemektir.
+Öğrenci: Ali Uçma
+Numara: 2212721007
+Ders: BLG 307 - Yapay Zeka Sistemleri
 
 ---
 
-## 📐 Problem Tanımı ve Matematiksel Model
+### Proje Açıklaması
 
-### Amaç Fonksiyonu (Test Hassasiyeti)
+Bu proje, bir biyoteknoloji laboratuvarında en verimli test çözeltisini elde etmek amacıyla Genetik Algoritma (GA) kullanılarak geliştirilmiştir. Amaç, Reaktif A ve Reaktif B oranlarını belirli kısıtlar altında optimize ederek maksimum Test Hassasiyeti Puanını elde etmektir.
 
-Test hassasiyeti aşağıdaki matematiksel model ile ifade edilmiştir:
-
-
-y =  = 3x₁ + 2x₂ + x₁x₂ - 0.5x₂² 
-
-Burada;  
-y: Test hassasiyeti puanı  
-x₁: Reaktif A oranı (%)  
-x₂: Reaktif B oranı (%)  
-
-Bu fonksiyon **maksimize edilmektedir**.
+Problem, doğrusal olmayan bir amaç fonksiyonuna ve katı kısıtlara sahip olduğu için evrimsel hesaplama yöntemleri tercih edilmiştir.
 
 ---
 
-## 📌 Değişkenler (Decision Variables)
+### Problem Tanımı ve Matematiksel Model
 
-| Değişken | Açıklama | Aralık |
-|--------|---------|--------|
-| x₁ | Reaktif A oranı (%) | 10 – 80 |
-| x₂ | Reaktif B oranı (%) | 10 – 80 |
+Amaç Fonksiyonu (Maksimizasyon):
+$$y = 3x_1 + 2x_2 + x_1x_2 - 0.5x_2^2$$
 
----
+Değişkenler:
+* x1: Reaktif A oranı (%) → [10, 80]
+* x2: Reaktif B oranı (%) → [10, 80]
 
-## 📌 Kısıtlar (Constraints)
-
-- Reaktif oranlarının toplamı %100’ü geçemez  
-  x₁ + x₂ ≤ 100 
-
-- Reaktif A oranı en az %25 olmalıdır  
- x₁ ≥ 25 
+Kısıtlar:
+1. Toplam Karışım Kısıtı: $x_1 + x_2 \le 100$
+2. Minimum A Reaktif Kısıtı: $x_1 \ge 25$
 
 ---
 
-## 🧬 Genetik Algoritma Yapısı
+### Algoritma Tasarımı ve Yöntemler
 
-Problem sürekli (float) değişkenler içerdiğinden hassas ayarlamaya uygun bir genetik algoritma tasarlanmıştır.
+Bu projede problemin doğasına uygun olarak Sürekli (Real-valued) Genetik Algoritma kullanılmıştır. Kodda kullanılan yöntemler şunlardır:
 
-### ✔ Birey Temsili
-Her birey iki gen içeren bir yapıdadır:
-[x₁, x₂]
-
-yaml
-Kodu kopyala
-
-### ✔ Başlangıç Popülasyonu
-Popülasyon büyüklüğü: 30  
-Bireyler, değişken sınırları içerisinde rastgele oluşturulmuştur.
-
-### ✔ Seçim Mekanizması
-Turnuva seçimi (k = 3) kullanılmıştır.
-
-### ✔ Çaprazlama (Crossover)
-Aritmetik (ağırlıklı ortalama) çaprazlama yöntemi uygulanmıştır.
-
-### ✔ Mutasyon
-- x₁ genine ±5 aralığında küçük değişimler  
-- x₂ genine ±5 aralığında küçük değişimler  
-- Mutasyon olasılığı: 0.2  
-
-Bu yöntemle çözüm uzayında ince ayar yapılması sağlanmıştır.
-
-### ✔ Kısıt Yönetimi
-Kısıtları ihlal eden bireylere yüksek ceza değeri uygulanarak (ceza fonksiyonu) uygun olmayan çözümler elenmiştir.
-
-### ✔ Nesil Sayısı
-Toplam: 100 nesil
+* Birey Temsili: Her birey [x1, x2] şeklinde ondalıklı (float) sayılardan oluşan bir kromozoma sahiptir.
+* Popülasyon: Algoritma, belirlenen aralıklarda rastgele oluşturulmuş 30 bireylik bir popülasyon ile çalışır.
+* Kısıt Yönetimi: Kısıtları ihlal eden (örneğin toplamı 100'ü geçen) bireyler silinmek yerine, matematiksel olarak sınırlar içine çekilerek geçerli hale getirilmiştir. Bu sayede algoritma geçerli çözüm uzayında kalmaktadır.
+* Seçim (Selection): Turnuva Seçimi (Tournament Selection) kullanılmıştır (k=3). Rastgele seçilen 3 birey arasından en iyisi ebeveyn olarak seçilir.
+* Çaprazlama (Crossover): Uniform Crossover kullanılmıştır. Ebeveynlerin genleri olasılıksal olarak takas edilir.
+* Mutasyon: Genlere ± 2.0 aralığında rastgele küçük değerler eklenerek (random.uniform) yerel arama ve çeşitlilik sağlanmıştır.
 
 ---
 
-## 📌 Sonuçlar
+### Sonuçlar
 
-Genetik algoritma çalıştırıldığında elde edilen en iyi çözüm aşağıdaki gibidir:
+Algoritma 50 nesil boyunca çalıştırılmış ve aşağıdaki en iyi sonuçlara ulaşılmıştır:
 
 | Parametre | Değer |
-|--------|------|
-| Reaktif A (x₁) | ≈ 70 – 75 % |
-| Reaktif B (x₂) | ≈ 25 – 30 % |
-| Maksimum Test Hassasiyeti | ≈ 1800-1900|
+| :--- | :--- |
+| Reaktif A (x1) | % 67.08 |
+| Reaktif B (x2) | % 32.92 |
+| Toplam Oran | % 100.00 |
+| Maksimum Skor (Fitness) | 1933.49 |
 
-Elde edilen sonuçlar, reaktif oranlarının dengeli bir şekilde dağıtılmasının test hassasiyetini artırdığını göstermektedir.
-
----
-
-## 📈 Fitness Grafiği
-
-Fitness grafiği incelendiğinde:
-
-- İlk nesillerde hızlı bir artış gözlemlenmiştir.
-- Orta nesillerden itibaren artış hızı azalmış,
-- Son nesillerde algoritmanın **optimum çözüme yakınsadığı** görülmüştür.
-
-(Not: Fitness grafiği notebook dosyasında gösterilmiştir.)
+Yorum:
+Sonuçlar incelendiğinde, algoritmanın toplam sınırını (100) tam olarak kullandığı görülmektedir. x1 değişkeninin katsayısı denklemde daha baskın olduğu için algoritma bu oranı artırma eğilimine girmiş, ancak x2 değişkeninin de denklemdeki pozitif etkisi nedeniyle dengeyi %67 - %33 civarında kurmuştur.
 
 ---
 
-## 📁 Dosya Yapısı
+### Grafik Analizi
 
-├── README.md
-├── YZS_ödev1.ipynb
+Elde edilen Fitness - Nesil grafiğinde:
+* Algoritma ilk nesillerde çok hızlı bir şekilde geçerli ve yüksek skorlu çözümlere ulaşmıştır.
+* İlerleyen nesillerde grafik yatay seyretmiştir; bu durum algoritmanın Global Maksimum noktasına (1933.49) çok erken ulaştığını ve bu noktayı koruyarak hassas ayar (fine-tuning) yaptığını göstermektedir.
+
+---
+
+### Kurulum ve Çalıştırma
+
+Proje Python dili ile yazılmıştır.
+
+1. Gerekli kütüphaneleri yükleyin:
+   pip install numpy matplotlib
+
+2. YZS_odev1.ipynb dosyasını Jupyter Notebook veya Google Colab ile açarak çalıştırın.
