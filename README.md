@@ -2,79 +2,112 @@
 
 ## Genetik Algoritma ile Numune Karışımı Optimizasyonu (Senaryo 7)
 
-Öğrenci: Ali Uçma
-Numara: 2212721007
-Ders: BLG 307 - Yapay Zeka Sistemleri
-GitHub Repo Bağlantısı: https://github.com/Alu0320/genetik_optimizasyon
-
-
----
-
-### Proje Açıklaması
-
-Bu proje, bir biyoteknoloji laboratuvarında en verimli test çözeltisini elde etmek amacıyla Genetik Algoritma (GA) kullanılarak geliştirilmiştir. Amaç, Reaktif A ve Reaktif B oranlarını belirli kısıtlar altında optimize ederek maksimum Test Hassasiyeti Puanını elde etmektir.
-
-Problem, doğrusal olmayan bir amaç fonksiyonuna ve katı kısıtlara sahip olduğu için evrimsel hesaplama yöntemleri tercih edilmiştir.
+**Öğrenci:** Ali Uçma  
+**Numara:** 2212721007  
+**Ders:** BLG 307 – Yapay Zeka Sistemleri  
+**GitHub Repo:** https://github.com/Alu0320/genetik_optimizasyon  
 
 ---
 
-### Problem Tanımı ve Matematiksel Model
+## Proje Açıklaması
 
-Amaç Fonksiyonu (Maksimizasyon):
+Bu proje, bir biyoteknoloji laboratuvarında en verimli test çözeltisini elde etmek amacıyla **Genetik Algoritma (GA)** kullanılarak geliştirilmiştir. Amaç; Reaktif A (x1) ve Reaktif B (x2) oranlarını belirli kısıtlar altında optimize ederek **maksimum Test Hassasiyeti Puanını** elde etmektir.
+
+Problem, doğrusal olmayan bir amaç fonksiyonuna ve birden fazla kısıta sahip olduğu için klasik optimizasyon yöntemleri yerine, küresel arama yeteneği güçlü olan **evrimsel hesaplama tabanlı Genetik Algoritma** tercih edilmiştir.
+
+---
+
+## Problem Tanımı ve Matematiksel Model
+
+### Amaç Fonksiyonu (Maksimizasyon)
+
 $$y = 3x_1 + 2x_2 + x_1x_2 - 0.5x_2^2$$
 
-Değişkenler:
-* x1: Reaktif A oranı (%) → [10, 80]
-* x2: Reaktif B oranı (%) → [10, 80]
 
-Kısıtlar:
-1. Toplam Karışım Kısıtı: $x_1 + x_2 \le 100$
-2. Minimum A Reaktif Kısıtı: $x_1 \ge 25$
+### Değişkenler
 
----
+- **x1:** Reaktif A oranı (%) → [10, 80]  
+- **x2:** Reaktif B oranı (%) → [10, 80]
 
-### Algoritma Tasarımı ve Yöntemler
+### Kısıtlar
 
-Bu projede problemin doğasına uygun olarak Sürekli (Real-valued) Genetik Algoritma kullanılmıştır. Kodda kullanılan yöntemler şunlardır:
+- **Toplam Karışım Kısıtı:**  
+x1 + x2 ≤ 100
 
-* Birey Temsili: Her birey [x1, x2] şeklinde ondalıklı (float) sayılardan oluşan bir kromozoma sahiptir.
-* Popülasyon: Algoritma, belirlenen aralıklarda rastgele oluşturulmuş 30 bireylik bir popülasyon ile çalışır.
-* Kısıt Yönetimi: Kısıtları ihlal eden (örneğin toplamı 100'ü geçen) bireyler silinmek yerine, matematiksel olarak sınırlar içine çekilerek geçerli hale getirilmiştir. Bu sayede algoritma geçerli çözüm uzayında kalmaktadır.
-* Seçim (Selection): Turnuva Seçimi (Tournament Selection) kullanılmıştır (k=3). Rastgele seçilen 3 birey arasından en iyisi ebeveyn olarak seçilir.
-* Çaprazlama (Crossover): Uniform Crossover kullanılmıştır. Ebeveynlerin genleri olasılıksal olarak takas edilir.
-* Mutasyon: Genlere ± 2.0 aralığında rastgele küçük değerler eklenerek (random.uniform) yerel arama ve çeşitlilik sağlanmıştır.
+- **Minimum Reaktif A Kısıtı:**  
+x1 ≥ 25
 
 ---
 
-### Sonuçlar
+## Algoritma Tasarımı ve Kullanılan Yöntemler
 
-Algoritma 50 nesil boyunca çalıştırılmış ve aşağıdaki en iyi sonuçlara ulaşılmıştır:
+Bu çalışmada, problem yapısına uygun olarak özelleştirilmiş bir **Genetik Algoritma** uygulanmıştır.
+
+### Birey Temsili
+Her birey `[x1, x2]` şeklinde iki genli bir kromozom ile temsil edilmektedir. Genetik işlemler sonrasında bireyler **onarım (repair) mekanizması** ile kısıtlara uygun hale getirilmekte ve **tamsayı değerlere yuvarlanmaktadır**.
+
+### Popülasyon
+Algoritma, başlangıçta **40 bireyden** oluşan rastgele bir popülasyon ile çalışmaktadır.
+
+### Uygunluk (Fitness) Fonksiyonu
+Amaç fonksiyonu temel alınmış, kısıt ihlallerinde **ceza (penalty)** terimleri uygulanmıştır. Bu sayede kısıt dışı çözümler düşük fitness değeri alarak elenmiştir.
+
+### Kısıt Yönetimi
+Kısıtları ihlal eden bireyler doğrudan silinmek yerine, matematiksel olarak sınırlar içerisine çekilmiştir. Bu **hibrit ceza + onarım yaklaşımı**, algoritmanın geçerli çözüm uzayında kalmasını sağlamıştır.
+
+### Seçim (Selection)
+**Rulet Tekerleği Seçimi (Roulette Wheel Selection)** kullanılmıştır. Fitness değeri yüksek olan bireylerin ebeveyn seçilme olasılığı daha fazladır.
+
+### Çaprazlama (Crossover)
+**Uniform Crossover** yöntemi uygulanmıştır. Ebeveyn genleri %50 olasılıkla çocuk bireylere aktarılmıştır.
+
+### Mutasyon
+Genler, belirli bir olasılıkla `±1` veya `±5` değerleriyle değiştirilerek çeşitlilik sağlanmıştır. Mutasyon sonrası bireyler tekrar onarım işlemine tabi tutulmuştur.
+
+### Elitizm
+Her nesilde en iyi birey, bir sonraki nesle **doğrudan aktarılmıştır**.
+
+---
+
+## Sonuçlar
+
+Algoritma **50 nesil** boyunca çalıştırılmış ve aşağıdaki en iyi çözüme ulaşılmıştır:
 
 | Parametre | Değer |
-| :--- | :--- |
-| Reaktif A (x1) | % 67.08 |
-| Reaktif B (x2) | % 32.92 |
-| Toplam Oran | % 100.00 |
-| Maksimum Skor (Fitness) | 1933.49 |
+|---------|------|
+| Reaktif A (x1) | %67 |
+| Reaktif B (x2) | %33 |
+| Toplam Oran | %100 |
+| Maksimum Fitness | 1933.50 |
 
-Yorum:
-Sonuçlar incelendiğinde, algoritmanın toplam sınırını (100) tam olarak kullandığı görülmektedir. x1 değişkeninin katsayısı denklemde daha baskın olduğu için algoritma bu oranı artırma eğilimine girmiş, ancak x2 değişkeninin de denklemdeki pozitif etkisi nedeniyle dengeyi %67 - %33 civarında kurmuştur.
 
----
-
-### Grafik Analizi
-
-Elde edilen Fitness - Nesil grafiğinde:
-* Algoritma ilk nesillerde çok hızlı bir şekilde geçerli ve yüksek skorlu çözümlere ulaşmıştır.
-* İlerleyen nesillerde grafik yatay seyretmiştir; bu durum algoritmanın Global Maksimum noktasına (1933.49) çok erken ulaştığını ve bu noktayı koruyarak hassas ayar (fine-tuning) yaptığını göstermektedir.
+### Yorum
+Sonuçlar incelendiğinde, algoritmanın toplam karışım sınırını (%100) tam olarak kullandığı görülmektedir. Amaç fonksiyonunda **x1 katsayısının daha baskın olması**, çözümün x1 yönünde artmasına neden olmuştur. Ancak x2 değişkeninin pozitif katkısı sebebiyle optimum denge yaklaşık **%67 – %33** oranında oluşmuştur.
 
 ---
 
-### Kurulum ve Çalıştırma
+## Grafik Analizi
 
-Proje Python dili ile yazılmıştır.
+Fitness–Nesil grafiği incelendiğinde:
 
-1. Gerekli kütüphaneleri yükleyin:
-   pip install numpy matplotlib
+- Algoritmanın ilk nesillerde hızlı bir yakınsama gösterdiği,  
+- Erken aşamada küresel maksimuma ulaştığı,  
+- Sonraki nesillerde bu değeri koruyarak **kararlı (stabil)** bir çözüm ürettiği  
 
-2. YZS_odev1.ipynb dosyasını Jupyter Notebook veya Google Colab ile açarak çalıştırın.
+gözlemlenmiştir.
+
+Bu durum, kullanılan GA parametrelerinin problem için uygun seçildiğini göstermektedir.
+
+---
+
+## Kurulum ve Çalıştırma
+
+Proje **Python** dili ile geliştirilmiştir.
+
+### Gerekli kütüphaneler:
+pip install numpy matplotlib
+
+Kodu kopyala
+
+### Çalıştırma:
+`YZS_1_Proje.ipynb` dosyasını **Jupyter Notebook** veya **Google Colab** ortamında açarak çalıştırabilirsiniz.
