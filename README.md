@@ -5,13 +5,13 @@
 **Öğrenci:** Ali Uçma  
 **Numara:** 2212721007  
 **Ders:** BLG 307 – Yapay Zeka Sistemleri  
-**GitHub Repo:** https://github.com/Alu0320/genetik_optimizasyon  
+**GitHub Repo:** [https://github.com/Alu0320/genetik_optimizasyon](https://github.com/Alu0320/genetik_optimizasyon)
 
 ---
 
 ## Proje Açıklaması
 
-Bu proje, bir biyoteknoloji laboratuvarında en verimli test çözeltisini elde etmek amacıyla **Genetik Algoritma (GA)** kullanılarak geliştirilmiştir. Amaç; Reaktif A (x1) ve Reaktif B (x2) oranlarını belirli kısıtlar altında optimize ederek **maksimum Test Hassasiyeti Puanını** elde etmektir.
+Bu proje, bir biyoteknoloji laboratuvarında en verimli test çözeltisini elde etmek amacıyla **Genetik Algoritma (GA)** kullanılarak geliştirilmiştir. Amaç; Reaktif A (x₁) ve Reaktif B (x₂) oranlarını belirli kısıtlar altında optimize ederek **maksimum Test Hassasiyeti Puanını** elde etmektir.
 
 Problem, doğrusal olmayan bir amaç fonksiyonuna ve birden fazla kısıta sahip olduğu için klasik optimizasyon yöntemleri yerine, küresel arama yeteneği güçlü olan **evrimsel hesaplama tabanlı Genetik Algoritma** tercih edilmiştir.
 
@@ -21,82 +21,80 @@ Problem, doğrusal olmayan bir amaç fonksiyonuna ve birden fazla kısıta sahip
 
 ### Amaç Fonksiyonu (Maksimizasyon)
 
-$$y = 3x_1 + 2x_2 + x_1x_2 - 0.5x_2^2$$
+```math
+y = 3x_1 + 2x_2 + x_1x_2 - 0.5x_2^2
+```
 
+> Not: GitHub Markdown matematik ifadelerini sınırlı desteklediği için formül kod bloğu içinde gösterilmiştir.
 
 ### Değişkenler
 
-- **x1:** Reaktif A oranı (%) → [10, 80]  
-- **x2:** Reaktif B oranı (%) → [10, 80]
+* **x₁:** Reaktif A oranı (%) → [10, 80]
+* **x₂:** Reaktif B oranı (%) → [10, 80]
 
 ### Kısıtlar
 
-- **Toplam Karışım Kısıtı:**  
-x1 + x2 ≤ 100
+* **Toplam Karışım Kısıtı:**  
+  x₁ + x₂ ≤ 100
 
-- **Minimum Reaktif A Kısıtı:**  
-x1 ≥ 25
+* **Minimum Reaktif A Kısıtı:**  
+  x₁ ≥ 25
 
 ---
 
 ## Algoritma Tasarımı ve Kullanılan Yöntemler
 
-Bu çalışmada, problem yapısına uygun olarak özelleştirilmiş bir **Genetik Algoritma** uygulanmıştır.
+Bu çalışmada, problem yapısına uygun şekilde yapılandırılmış bir **Genetik Algoritma** uygulanmıştır.
 
 ### Birey Temsili
-Her birey `[x1, x2]` şeklinde iki genli bir kromozom ile temsil edilmektedir. Genetik işlemler sonrasında bireyler **onarım (repair) mekanizması** ile kısıtlara uygun hale getirilmekte ve **tamsayı değerlere yuvarlanmaktadır**.
+
+Her birey, **[x₁, x₂]** şeklinde iki genli ve sürekli (ondalıklı) değerler içeren bir kromozom ile temsil edilmektedir.
 
 ### Popülasyon
-Algoritma, başlangıçta **40 bireyden** oluşan rastgele bir popülasyon ile çalışmaktadır.
+
+Algoritma, başlangıçta **40 bireyden** oluşan rastgele bir popülasyon ile başlatılmaktadır. Başlangıç bireyleri oluşturulurken tüm kısıtlar sağlanmaktadır.
 
 ### Uygunluk (Fitness) Fonksiyonu
-Amaç fonksiyonu temel alınmış, kısıt ihlallerinde **ceza (penalty)** terimleri uygulanmıştır. Bu sayede kısıt dışı çözümler düşük fitness değeri alarak elenmiştir.
+
+Uygunluk değeri, doğrudan amaç fonksiyonu kullanılarak hesaplanmıştır. Kısıt ihlali durumunda bireyler ceza puanı verilerek değil, **yeniden üretilerek** çözüm uzayının geçerli bölgesinde tutulmuştur.
 
 ### Kısıt Yönetimi
-Kısıtları ihlal eden bireyler doğrudan silinmek yerine, matematiksel olarak sınırlar içerisine çekilmiştir. Bu **hibrit ceza + onarım yaklaşımı**, algoritmanın geçerli çözüm uzayında kalmasını sağlamıştır.
 
-### Seçim (Selection)
-**Rulet Tekerleği Seçimi (Roulette Wheel Selection)** kullanılmıştır. Fitness değeri yüksek olan bireylerin ebeveyn seçilme olasılığı daha fazladır.
+Kısıtları ihlal eden bireyler:
+
+* Çaprazlama veya mutasyon sonrası kontrol edilmekte,
+* Geçersiz bireyler, kısıtlara uygun yeni bireylerle değiştirilmektedir.
+
+Bu yaklaşım sayesinde algoritma yalnızca **geçerli çözümler** üzerinde çalışmaktadır.
+
+### Seçilim (Selection)
+
+**Turnuva Seçimi (Tournament Selection)** yöntemi kullanılmıştır. Rastgele seçilen bireyler arasından fitness değeri en yüksek olan birey ebeveyn olarak seçilmektedir.
 
 ### Çaprazlama (Crossover)
-**Uniform Crossover** yöntemi uygulanmıştır. Ebeveyn genleri %50 olasılıkla çocuk bireylere aktarılmıştır.
+
+**Aritmetik Çaprazlama (Arithmetic Crossover)** uygulanmıştır. Ebeveynler, rastgele belirlenen bir α katsayısı ile doğrusal olarak birleştirilerek yeni bireyler üretilmiştir.
 
 ### Mutasyon
-Genler, belirli bir olasılıkla `±1` veya `±5` değerleriyle değiştirilerek çeşitlilik sağlanmıştır. Mutasyon sonrası bireyler tekrar onarım işlemine tabi tutulmuştur.
 
-### Elitizm
-Her nesilde en iyi birey, bir sonraki nesle **doğrudan aktarılmıştır**.
+Mutasyon işlemi, belirli bir olasılıkla gen değerlerine küçük rastgele değişiklikler (±5 aralığında) eklenerek gerçekleştirilmiştir. Mutasyon sonrası bireyler tekrar kısıt kontrolünden geçirilmiştir.
+
+### Nesil Döngüsü
+
+Algoritma **80 nesil** boyunca çalıştırılmış ve her nesilde elde edilen en iyi fitness değeri kaydedilmiştir.
 
 ---
 
 ## Sonuçlar
 
-Algoritma **50 nesil** boyunca çalıştırılmış ve aşağıdaki en iyi çözüme ulaşılmıştır:
+Algoritma çalıştırıldığında aşağıdaki en iyi çözüme ulaşılmıştır:
 
-| Parametre | Değer |
-|---------|------|
-| Reaktif A (x1) | %67 |
-| Reaktif B (x2) | %33 |
-| Toplam Oran | %100 |
-| Maksimum Fitness | 1933.50 |
-
-
-### Yorum
-Sonuçlar incelendiğinde, algoritmanın toplam karışım sınırını (%100) tam olarak kullandığı görülmektedir. Amaç fonksiyonunda **x1 katsayısının daha baskın olması**, çözümün x1 yönünde artmasına neden olmuştur. Ancak x2 değişkeninin pozitif katkısı sebebiyle optimum denge yaklaşık **%67 – %33** oranında oluşmuştur.
-
----
-
-## Grafik Analizi
-
-Fitness–Nesil grafiği incelendiğinde:
-
-- Algoritmanın ilk nesillerde hızlı bir yakınsama gösterdiği,  
-- Erken aşamada küresel maksimuma ulaştığı,  
-- Sonraki nesillerde bu değeri koruyarak **kararlı (stabil)** bir çözüm ürettiği  
-
-gözlemlenmiştir.
-
-Bu durum, kullanılan GA parametrelerinin problem için uygun seçildiğini göstermektedir.
+| Parametre        | Değer       |
+| ---------------- | ----------- |
+| Reaktif A (x₁)   | %68.02      |
+| Reaktif B (x₂)   | %31.86      |
+| Toplam Oran      | %99.88      |
+| Maksimum Fitness | **1927.65** |
 
 ---
 
@@ -104,10 +102,12 @@ Bu durum, kullanılan GA parametrelerinin problem için uygun seçildiğini gös
 
 Proje **Python** dili ile geliştirilmiştir.
 
-### Gerekli kütüphaneler:
+### Gerekli Kütüphaneler
+
+```bash
 pip install numpy matplotlib
+```
 
-Kodu kopyala
+### Çalıştırma
 
-### Çalıştırma:
 `YZS_1_Proje.ipynb` dosyasını **Jupyter Notebook** veya **Google Colab** ortamında açarak çalıştırabilirsiniz.
